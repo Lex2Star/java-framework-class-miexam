@@ -3,13 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="productDao" class="kr.ac.jejunu.ProductDao">
-        <property name="connectionMaker" ref="connectionMaker"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="connectionMaker" class="kr.ac.jejunu.JejuProductDao">
-        <property name="id" value="root"/>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="username" value="root"/>
         <property name="password" value="1234"/>
         <property name="url" value="jdbc:mysql://117.17.102.106/jeju?characterEncoding=utf-8"/>
-        <property name="className" value="com.mysql.jdbc.Driver"/>
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </bean>
 
 </beans>
