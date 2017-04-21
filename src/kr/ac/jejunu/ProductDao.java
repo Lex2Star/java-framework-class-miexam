@@ -25,8 +25,8 @@ public class ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            preparedStatement = connection.prepareStatement("select * from product where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new StatementStrategyForGet();
+            preparedStatement = statementStrategy.makeStatement(id, connection);
 
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
@@ -58,10 +58,10 @@ public class ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            preparedStatement = connection.prepareStatement("INSERT INTO product(id, title, price) VALUES (?, ?, ?)");
-            preparedStatement.setLong(1, product.getId());
-            preparedStatement.setString(2, product.getTitle());
-            preparedStatement.setInt(3, product.getPrice());
+
+            StatementStrategy statementStrategy = new StatementStrategyForAdd();
+            preparedStatement = statementStrategy.makeStatement(product, connection);
+
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,10 +82,9 @@ public class ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            preparedStatement = connection.prepareStatement("update product set title = ?, price = ? where id = ?");
-            preparedStatement.setString(1, product.getTitle());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setLong(3, product.getId());
+            StatementStrategy statementStrategy = new StatementStrategyForUpdate();
+            preparedStatement = statementStrategy.makeStatement(product, connection);
+
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,8 +105,9 @@ public class ProductDao {
         try {
             connection = dataSource.getConnection();
 
-            preparedStatement = connection.prepareStatement("DELETE FROM product WHERE id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new StatementStrategyForDelete();
+            preparedStatement = statementStrategy.makeStatement(id, connection);
+
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
