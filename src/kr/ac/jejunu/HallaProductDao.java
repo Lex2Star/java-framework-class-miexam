@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by hyunki on 2017. 4. 21..
  */
-public class HallaProductDao extends ProductDao {
+public class HallaProductDao implements ConnectionMaker {
 
     @Override
     public Connection getConnection() throws ClassNotFoundException, SQLException {
