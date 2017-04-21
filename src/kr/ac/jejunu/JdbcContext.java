@@ -23,6 +23,16 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
+    public void update(String sql, Object[] params) throws SQLException {
+        JdbcContextWithStatementStrategyForUpdate(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+            }
+            return preparedStatement;
+        });
+    }
+
     public Product JdbcContextWithStatementStrategyForGet(StatementStrategy statementStrategy) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;

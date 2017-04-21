@@ -1,5 +1,8 @@
 package kr.ac.jejunu;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import javax.sql.DataSource;
 import java.sql.*;
 
@@ -18,39 +21,30 @@ public class ProductDao {
     }
 
     public Product get(Long id) throws ClassNotFoundException, SQLException {
+        String sql = "select * from product where id = ?";
         return jdbcContext.JdbcContextWithStatementStrategyForGet(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement("select * from product where id = ?");
             preparedStatement.setLong(1, id);
             return preparedStatement;
         });
+
     }
 
-
     public void add(Product product) throws ClassNotFoundException, SQLException {
-        jdbcContext.JdbcContextWithStatementStrategyForUpdate(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO product(id, title, price) VALUES (?, ?, ?)");
-            preparedStatement.setLong(1, product.getId());
-            preparedStatement.setString(2, product.getTitle());
-            preparedStatement.setInt(3, product.getPrice());
-            return preparedStatement;
-        });
+        String sql = "INSERT INTO product(id, title, price) VALUES (?, ?, ?)";
+        Object[] params = {product.getId(), product.getTitle(), product.getPrice()};
+        jdbcContext.update(sql, params);
     }
 
     public void update(Product product) throws ClassNotFoundException, SQLException {
-        jdbcContext.JdbcContextWithStatementStrategyForUpdate(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("update product set title = ?, price = ? where id = ?");
-            preparedStatement.setString(1, product.getTitle());
-            preparedStatement.setInt(2, product.getPrice());
-            preparedStatement.setLong(3, product.getId());
-            return preparedStatement;
-        });
+        String sql = "update product set title = ?, price = ? where id = ?";
+        Object[] params = {product.getTitle(), product.getPrice(), product.getId()};
+        jdbcContext.update(sql, params);
     }
 
     public void delete(Long id) throws ClassNotFoundException, SQLException {
-        jdbcContext.JdbcContextWithStatementStrategyForUpdate(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM product WHERE id = ?");
-            preparedStatement.setLong(1, id);
-            return preparedStatement;
-        });
+        String sql = "DELETE FROM product WHERE id = ?";
+        Object[] params = {id};
+        jdbcContext.update(sql, params);
     }
 }
